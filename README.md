@@ -297,26 +297,6 @@ tp-ws-individual-matheusCarvalho/
 └── documento_base/         # Especificação e requisitos da atividade
 ```
 
----
-
-## ✅ Requisitos da Atividade Atendidos
-
-| # | Requisito | Status |
-|---|-----------|--------|
-| 1 | Consumo de API externa pública (TMDb) | ✅ |
-| 2 | Consumo de API de IA generativa (Gemini 1.5 Flash) | ✅ |
-| 3 | Web scraping de fonte de dados (Tunefind) | ✅ |
-| 4 | Backend próprio com API REST (Flask) encapsulando o scraping | ✅ |
-| 5 | Frontend em HTML/CSS/JS puro (sem frameworks) | ✅ |
-| 6 | ES6 Modules (import/export) no JavaScript | ✅ |
-| 7 | Interface responsiva mobile-first | ✅ |
-| 8 | Visualização de dados (cards, barras de progresso, gráfico Canvas) | ✅ |
-| 9 | Tratamento de erros e feedback ao usuário | ✅ |
-| 10 | CORS configurado no backend | ✅ |
-| 11 | Rodízio de chaves de API | ✅ |
-
----
-
 ## 👨‍💻 Autor
 
 **Matheus Carvalho**  
