@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineSound — Análise de Compatibilidade Musical em Filmes</title>
+  <meta name="description"
+    content="Descubra filmes com trilhas sonoras compatíveis com seu gosto musical usando IA e dados do TMDb e Tunefind.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- Topbar / Cabeçalho -->
+  <header class="header">
+    <div class="container header-container">
+      <div class="brand">
+        <span class="brand-icon">🎬</span>
+        <div>
+          <h1 class="brand-title">CineSound</h1>
+          <p class="brand-subtitle">Compatibilidade entre Filmes & Trilhas Sonoras</p>
+        </div>
+      </div>
+      <button type="button" class="btn btn-secondary" id="btn-abrir-chaves" aria-label="Configurar chaves de API">
+        ⚙️ Chaves de API
+      </button>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="container main-content">
+
+    <!-- Hero / Apresentação -->
+    <section class="hero-section">
+      <h2 class="hero-title">Encontre o filme perfeito para o seu ouvido musical</h2>
+      <p class="hero-desc">
+        Escolha o gênero de filme que deseja assistir e o estilo musical que ama.
+        O CineSound consulta o <strong>TMDb</strong>, extrai as trilhas pelo <strong>Tunefind</strong> e usa a
+        inteligência do <strong>Gemini</strong> para encontrar a combinação perfeita.
+      </p>
+    </section>
+
+    <!-- Formulário de Filtros -->
+    <section class="form-section">
+      <form id="form-filtros" class="card form-card">
+        <div class="form-grid">
+          <!-- Gênero de Filme -->
+          <div class="form-group">
+            <label for="select-genero" class="form-label">
+              🎭 Gênero do Filme <span class="required">*</span>
+            </label>
+            <select id="select-genero" class="form-control" required>
+              <option value="">Selecione um gênero...</option>
+              <option value="28">Ação</option>
+              <option value="12">Aventura</option>
+              <option value="16">Animação</option>
+              <option value="35">Comédia</option>
+              <option value="99">Documentário</option>
+              <option value="18">Drama</option>
+              <option value="878">Ficção Científica</option>
+              <option value="10749">Romance</option>
+              <option value="27">Terror</option>
+              <option value="53">Thriller / Suspense</option>
+            </select>
+          </div>
+
+          <!-- Estilo Musical -->
+          <div class="form-group">
+            <label for="select-estilo" class="form-label">
+              🎵 Estilo Musical Preferido <span class="required">*</span>
+            </label>
+            <select id="select-estilo" class="form-control" required>
+              <option value="">Selecione um estilo...</option>
+              <option value="Rock">Rock (Clássico, Alternativo, Grunge)</option>
+              <option value="Pop">Pop</option>
+              <option value="Hip-Hop / Rap">Hip-Hop / Rap</option>
+              <option value="Jazz">Jazz</option>
+              <option value="Música Clássica">Música Clássica</option>
+              <option value="Eletrônica / EDM">Eletrônica / EDM / Synthwave</option>
+              <option value="R&B / Soul">R&B / Soul</option>
+              <option value="Country">Country</option>
+              <option value="Heavy Metal">Heavy Metal</option>
+              <option value="Indie / Alternativo">Indie / Alternativo</option>
+              <option value="Folk">Folk / Acústico</option>
+              <option value="Reggae">Reggae</option>
+              <option value="Blues">Blues</option>
+              <option value="Punk">Punk Rock</option>
+              <option value="Trilha Sonora Orquestral">Trilha Sonora Orquestral / Épica</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Botão Toggle Filtros Avançados -->
+        <div class="toggle-filtros-wrap">
+          <button type="button" id="btn-toggle-filtros" class="btn-link">
+            ⚙️ Mostrar Filtros Avançados
+          </button>
+        </div>
+
+        <!-- Filtros Avançados (Colapsáveis) -->
+        <div id="filtros-avancados" class="filtros-avancados oculto">
+          <div class="form-grid">
+            <!-- Nota Mínima -->
+            <div class="form-group">
+              <label for="input-nota-min" class="form-label">
+                ⭐ Nota Mínima TMDb: <span id="val-nota-min" class="destaque-valor">7.0</span>
+              </label>
+              <input type="range" id="input-nota-min" min="0" max="10" step="0.5" value="7.0" class="range-slider">
+            </div>
+
+            <!-- Duração Máxima -->
+            <div class="form-group">
+              <label for="input-duracao-max" class="form-label">
+                ⏱️ Duração Máxima: <span id="val-duracao-max" class="destaque-valor">180 min</span>
+              </label>
+              <input type="range" id="input-duracao-max" min="60" max="240" step="15" value="180" class="range-slider">
+            </div>
+
+            <!-- Ano Mínimo / Máximo -->
+            <div class="form-group">
+              <label class="form-label">📅 Intervalo de Lançamento</label>
+              <div class="input-duplo">
+                <input type="number" id="input-ano-min" placeholder="De (ex: 2000)" min="1950" max="2026"
+                  class="form-control">
+                <input type="number" id="input-ano-max" placeholder="Até (ex: 2026)" min="1950" max="2026"
+                  class="form-control">
+              </div>
+            </div>
+
+            <!-- Votos Mínimos -->
+            <div class="form-group">
+              <label for="input-votos-min" class="form-label">🗳️ Votos Mínimos no TMDb</label>
+              <input type="number" id="input-votos-min" placeholder="Ex: 500" min="0" step="100" class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <!-- Ação Principal -->
+        <div class="form-action">
+          <button type="submit" id="btn-analisar" class="btn btn-primary btn-large">
+            🔍 Analisar Compatibilidade Musical
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Indicador de Status / Carregamento -->
+    <section id="secao-status" class="card status-card oculto" aria-live="polite">
+      <div class="status-inner">
+        <div class="spinner"></div>
+        <div class="status-textos">
+          <h3 id="status-mensagem">Processando requisições...</h3>
+          <p id="status-passo" class="status-passo">Passo 1 de 4</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Caixa de Erro -->
+    <section id="secao-erro" class="card erro-card oculto" role="alert">
+      <div class="erro-inner">
+        <span class="erro-icon">⚠️</span>
+        <div class="erro-conteudo">
+          <h3 class="erro-titulo">Atenção</h3>
+          <p id="erro-mensagem" class="erro-mensagem"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção de Resultados -->
+    <section id="secao-resultados" class="secao-resultados oculto">
+      <!-- Destaque do Melhor Filme -->
+      <div id="secao-destaque" class="destaque-container"></div>
+
+      <!-- Gráfico Comparativo -->
+      <div id="secao-grafico" class="card grafico-card" style="display: none;">
+        <h3 class="grafico-titulo">📊 Comparativo de Compatibilidade Musical (%)</h3>
+        <p class="grafico-subtitulo">Percentual semântico atribuído pelo Gemini para cada candidato</p>
+        <div class="canvas-wrapper">
+          <canvas id="grafico-barras" height="280"></canvas>
+        </div>
+      </div>
+
+      <!-- Grid com Todos os Filmes -->
+      <div class="filmes-header">
+        <h3 class="filmes-titulo">🎬 Filmes Analisados</h3>
+        <p class="filmes-subtitulo">Clique em qualquer card para ver a trilha completa e o gráfico detalhado</p>
+      </div>
+      <div id="grid-filmes" class="filmes-grid"></div>
+    </section>
+
+  </main>
+
+  <!-- Modal de Gerenciamento de Chaves de API -->
+  <div id="modal-chaves" class="modal-overlay oculto" role="dialog" aria-modal="true"
+    aria-labelledby="modal-chaves-titulo">
+    <div class="modal-content modal-chaves-content">
+      <div class="modal-header">
+        <h2 id="modal-chaves-titulo">⚙️ Configuração de Chaves de API</h2>
+        <button type="button" class="modal-fechar" id="btn-fechar-chaves" aria-label="Fechar modal">✕</button>
+      </div>
+
+      <p class="modal-intro">
+        O CineSound suporta <strong>rodízio circular de chaves</strong>. Você pode cadastrar mais de uma chave para a
+        mesma API. As chaves ficam salvas no seu navegador (localStorage).
+      </p>
+
+      <!-- Painel TMDb -->
+      <div class="chaves-secao">
+        <div class="chaves-secao-header">
+          <h3>🎬 TMDb (The Movie Database)</h3>
+          <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener noreferrer"
+            class="link-externo">Obter chave ↗</a>
+        </div>
+        <form id="form-chave-tmdb" class="chave-form">
+          <input type="text" id="input-chave-tmdb" placeholder="Cole sua API Key da TMDb..." class="form-control"
+            autocomplete="off">
+          <button type="submit" class="btn btn-secondary">Adicionar</button>
+        </form>
+        <ul id="lista-chaves-tmdb" class="chaves-lista"></ul>
+      </div>
+
+      <hr class="divisor">
+
+      <!-- Painel Gemini -->
+      <div class="chaves-secao">
+        <div class="chaves-secao-header">
+          <h3>🤖 Google Gemini AI</h3>
+          <a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer" class="link-externo">Obter
+            chave ↗</a>
+        </div>
+        <form id="form-chave-gemini" class="chave-form">
+          <input type="text" id="input-chave-gemini" placeholder="Cole sua API Key do Google AI Studio..."
+            class="form-control" autocomplete="off">
+          <button type="submit" class="btn btn-secondary">Adicionar</button>
+        </form>
+        <ul id="lista-chaves-gemini" class="chaves-lista"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <p>🎬 <strong>CineSound</strong> — Trabalho Prático Individual de Webservice (4º Período)</p>
+      <p class="footer-creditos">
+        Desenvolvido com <strong>TMDb API</strong>, <strong>Tunefind</strong> (Web Scraping / API Própria Flask).
+      </p>
+    </div>
+  </footer>
+
+  <!-- Script Principal com Módulos ES6 -->
+  <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
